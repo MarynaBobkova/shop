@@ -4,11 +4,15 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <changeSet id="add_tag_v.1.1.0" author="marina">
-        <tagDatabase tag="v.1.0.0"/>
+    <changeSet id="add_tag_v.1.2.0" author="marina">
+        <tagDatabase tag="v.1.2.0"/>
     </changeSet>
 
     <include file="create-table-cart.xml" relativeToChangelogFile="true"/>
+    <include file="create-foreign-key-cart-to-customer.xml" relativeToChangelogFile="true"/>
     <include file="add-carts.xml" relativeToChangelogFile="true"/>
+    <include file="create-table-cart-product.xml" relativeToChangelogFile="true"/>
+    <include file="create-foreign-keys-cart-product.xml" relativeToChangelogFile="true"/>
+    <include file="add-products-to-carts.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
