@@ -2,9 +2,13 @@ package de.aittr.shop.service;
 
 import de.aittr.shop.domain.dto.ProductDto;
 import de.aittr.shop.domain.entity.Product;
+import de.aittr.shop.exception_handlig.exceotions.FourthTestException;
+import de.aittr.shop.exception_handlig.exceotions.SecondTestException;
 import de.aittr.shop.repository.ProductRepository;
 import de.aittr.shop.service.interfaces.ProductService;
 import de.aittr.shop.service.mapping.ProductMappingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,6 +16,8 @@ import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private ProductRepository repository;
     private ProductMappingService mappingService;
@@ -23,13 +29,29 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto save(ProductDto dto) {
+        // Join point - то место, куда будет внедрён дополнительный код
         Product entity = mappingService.mapDtoToEntity(dto);
-        repository.save(entity);
+
+        try {
+            repository.save(entity);
+
+        } catch (Exception e) {
+        throw new FourthTestException("Saving product error");
+        }
+
         return mappingService.mapEntityToDto(entity);
     }
 
     @Override
     public List<ProductDto> getAll() {
+
+//        String productTitle = "Test product";
+//
+//        logger.info("Database request: get all products");
+//        logger.warn("Product with title {} not found", productTitle);
+//        logger.error("SQL exception! Incorrect query");
+        System.out.println("!!! GET ALL PRODUCTS !!!");
+
         return repository.findAll()
                 .stream()
                 //.filter(x -> x.isActive())
@@ -42,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getById(Long id) {
        if (id == null || id < 1) {
-           throw new RuntimeException("Invalid product id");
+           throw new SecondTestException("Invalid product id");
        }
        Product product = repository.findById(id).orElse(null);
 

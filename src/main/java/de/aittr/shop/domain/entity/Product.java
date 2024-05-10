@@ -1,6 +1,8 @@
 package de.aittr.shop.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -14,10 +16,27 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "titel")
+    @Column(name = "title")
+    @NotNull(message = "Product title cannot be null")
+    @NotBlank(message = "Product title cannot be empty")
+    @Pattern(
+            regexp = "[A-Z][a-z]{2,}",
+            message = "Product title should be at least 3 character length" +
+                    "start with capital letter and may contain only latin characters"
+    )
     private String title;
 
     @Column(name = "price")
+    @NotNull(message = "Product price cannot be null")
+    @DecimalMin(
+            value = "5.00",
+            message = "Product price should be greater or equal than 5"
+    )
+    @DecimalMax(
+            value = "100000.00",
+            inclusive = false,
+            message = "Product price should be lesser than 100 000"
+    )
     private BigDecimal price;
 
     @Column(name = "is_active")
@@ -37,32 +56,33 @@ public class Product {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
+    @JsonIgnore
     public boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     @Override
@@ -80,6 +100,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format("Product: ID - %d, title - %s, price - %.2f, active - %s", id, title, price, isActive ? "yes" : "no");
+        return String.format("Product: ID - %d, title - %s, price - %.2f, active - %s",
+                id, title, price, isActive ? "yes" : "no");
     }
 }
